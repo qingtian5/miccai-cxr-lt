@@ -1,0 +1,2298 @@
+2024/05/23 16:56:04 - mmengine - INFO - 
+------------------------------------------------------------
+System environment:
+    sys.platform: linux
+    Python: 3.9.16 (main, Jan 11 2023, 16:05:54) [GCC 11.2.0]
+    CUDA available: True
+    MUSA available: False
+    numpy_random_seed: 0
+    GPU 0,1,2,3,4,5,6,7: NVIDIA A800-SXM4-80GB
+    CUDA_HOME: /usr/local/cuda
+    NVCC: Cuda compilation tools, release 11.6, V11.6.124
+    GCC: gcc (Debian 10.2.1-6) 10.2.1 20210110
+    PyTorch: 1.12.1
+    PyTorch compiling details: PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201402
+  - Intel(R) oneAPI Math Kernel Library Version 2021.4-Product Build 20210904 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v2.6.0 (Git Hash 52b5f107dd9cf10910aaa19cb47f3abf9b349815)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX2
+  - CUDA Runtime 11.6
+  - NVCC architecture flags: -gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_61,code=sm_61;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_37,code=compute_37
+  - CuDNN 8.3.2  (built against CUDA 11.5)
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=11.6, CUDNN_VERSION=8.3.2, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -fabi-version=11 -Wno-deprecated -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -fopenmp -DNDEBUG -DUSE_KINETO -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -DEDGE_PROFILER_USE_KINETO -O2 -fPIC -Wno-narrowing -Wall -Wextra -Werror=return-type -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-unused-local-typedefs -Wno-strict-overflow -Wno-strict-aliasing -Wno-error=deprecated-declarations -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=redundant-decls -Wno-error=old-style-cast -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Werror=cast-function-type -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_VERSION=1.12.1, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=OFF, USE_MPI=OFF, USE_NCCL=ON, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+    TorchVision: 0.13.1
+    OpenCV: 3.4.16
+    MMEngine: 0.10.4
+
+Runtime environment:
+    cudnn_benchmark: False
+    mp_cfg: {'mp_start_method': 'fork', 'opencv_num_threads': 0}
+    dist_cfg: {'backend': 'nccl'}
+    seed: 0
+    diff_rank_seed: True
+    Distributed launcher: pytorch
+    Distributed training: True
+    GPU number: 8
+------------------------------------------------------------
+
+2024/05/23 16:56:05 - mmengine - INFO - Config:
+custom_imports = dict(
+    allow_failed_imports=False, imports='mmpretrain.datasets')
+data_preprocessor = dict(
+    bgr_to_rgb=True,
+    mean=[
+        123.675,
+        116.28,
+        103.53,
+    ],
+    std=[
+        58.395,
+        57.12,
+        57.375,
+    ])
+default_hooks = dict(
+    checkpoint=dict(interval=1, max_keep_ckpts=3, type='CheckpointHook'),
+    logger=dict(interval=1, type='LoggerHook'),
+    param_scheduler=dict(type='ParamSchedulerHook'),
+    runtime_info=dict(type='RuntimeInfoHook'),
+    sampler_seed=dict(type='DistSamplerSeedHook'),
+    timer=dict(type='IterTimerHook'))
+default_scope = 'mmpretrain'
+env_cfg = dict(
+    cudnn_benchmark=False,
+    dist_cfg=dict(backend='nccl'),
+    mp_cfg=dict(mp_start_method='fork', opencv_num_threads=0))
+launcher = 'pytorch'
+load_from = None
+log_level = 'INFO'
+log_processor = dict(
+    custom_cfg=[
+        dict(data_src='', method='mean', windows_size='global'),
+    ],
+    window_size=10)
+model = dict(
+    backbone=dict(arch='l', mask_ratio=0.75, patch_size=16, type='MAEViT'),
+    head=dict(
+        loss=dict(criterion='L2', type='PixelReconstructionLoss'),
+        norm_pix=True,
+        patch_size=16,
+        type='MAEPretrainHead'),
+    init_cfg=dict(
+        checkpoint=
+        '/mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth',
+        type='Pretrained'),
+    neck=dict(
+        decoder_depth=8,
+        decoder_embed_dim=512,
+        decoder_num_heads=16,
+        embed_dim=1024,
+        in_chans=3,
+        mlp_ratio=4.0,
+        patch_size=16,
+        type='MAEPretrainDecoder'),
+    type='MAE')
+optim_wrapper = dict(
+    loss_scale='dynamic',
+    optimizer=dict(
+        betas=(
+            0.9,
+            0.95,
+        ), lr=0.0024, type='AdamW', weight_decay=0.05),
+    paramwise_cfg=dict(
+        custom_keys=dict(
+            bias=dict(decay_mult=0.0),
+            cls_token=dict(decay_mult=0.0),
+            ln=dict(decay_mult=0.0),
+            mask_token=dict(decay_mult=0.0),
+            pos_embed=dict(decay_mult=0.0))),
+    type='AmpOptimWrapper')
+param_scheduler = [
+    dict(
+        begin=0,
+        by_epoch=True,
+        convert_to_iter_based=True,
+        end=40,
+        start_factor=0.0001,
+        type='LinearLR'),
+    dict(
+        T_max=1560,
+        begin=40,
+        by_epoch=True,
+        convert_to_iter_based=True,
+        end=1600,
+        type='CosineAnnealingLR'),
+]
+randomness = dict(diff_rank_seed=True, seed=0)
+resume = False
+train_cfg = dict(max_epochs=1600, type='EpochBasedTrainLoop')
+train_dataloader = dict(
+    batch_size=256,
+    collate_fn=dict(type='default_collate'),
+    dataset=dict(
+        ann_file=
+        '/mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/dataprocesser/anno.json',
+        pipeline=[
+            dict(type='LoadImageFromFile'),
+            dict(
+                backend='pillow',
+                crop_ratio_range=(
+                    0.2,
+                    1.0,
+                ),
+                interpolation='bicubic',
+                scale=224,
+                type='RandomResizedCrop'),
+            dict(prob=0.5, type='RandomFlip'),
+            dict(type='PackInputs'),
+        ],
+        type='Jsonlist'),
+    num_workers=16,
+    persistent_workers=True,
+    pin_memory=True,
+    sampler=dict(shuffle=True, type='DefaultSampler'))
+train_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(
+        backend='pillow',
+        crop_ratio_range=(
+            0.2,
+            1.0,
+        ),
+        interpolation='bicubic',
+        scale=224,
+        type='RandomResizedCrop'),
+    dict(prob=0.5, type='RandomFlip'),
+    dict(type='PackInputs'),
+]
+vis_backends = [
+    dict(type='LocalVisBackend'),
+]
+visualizer = dict(
+    name='visualizer',
+    type='UniversalVisualizer',
+    vis_backends=[
+        dict(type='LocalVisBackend'),
+    ])
+work_dir = './work_dirs/mae_vit-large-p16_8xb512-amp-coslr-1600e_in1k'
+
+2024/05/23 16:56:09 - mmengine - INFO - Hooks will be executed in the following order:
+before_run:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+before_train:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_train_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(NORMAL      ) DistSamplerSeedHook                
+ -------------------- 
+before_train_iter:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_train_iter:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+after_train_epoch:
+(NORMAL      ) IterTimerHook                      
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_val:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+before_val_epoch:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+before_val_iter:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_val_iter:
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_val_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+(LOW         ) ParamSchedulerHook                 
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+after_val:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+after_train:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(VERY_LOW    ) CheckpointHook                     
+ -------------------- 
+before_test:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+before_test_epoch:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+before_test_iter:
+(NORMAL      ) IterTimerHook                      
+ -------------------- 
+after_test_iter:
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_test_epoch:
+(VERY_HIGH   ) RuntimeInfoHook                    
+(NORMAL      ) IterTimerHook                      
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+after_test:
+(VERY_HIGH   ) RuntimeInfoHook                    
+ -------------------- 
+after_run:
+(BELOW_NORMAL) LoggerHook                         
+ -------------------- 
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.cls_token:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.cls_token:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.cls_token:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - WARNING - backbone.pos_embed is skipped since its requires_grad=False
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.patch_embed.projection.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.patch_embed.projection.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.patch_embed.projection.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.0.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.1.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.2.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.3.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.4.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.5.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.6.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.7.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.8.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.9.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.10.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.11.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.12.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.13.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.14.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.15.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.16.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.17.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.18.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.19.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.20.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.21.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.22.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.layers.23.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- backbone.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.mask_token:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.mask_token:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.mask_token:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - WARNING - neck.decoder_pos_embed is skipped since its requires_grad=False
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_embed.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_embed.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_embed.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.0.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.1.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.2.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.3.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.4.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.5.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.6.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.attn.qkv.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.attn.qkv.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.attn.qkv.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.attn.proj.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.attn.proj.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.attn.proj.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.ln2.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.ln2.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.ln2.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.ln2.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.ln2.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.ln2.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.ffn.layers.0.0.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.ffn.layers.0.0.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.ffn.layers.0.0.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.ffn.layers.1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.ffn.layers.1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_blocks.7.ffn.layers.1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.ln1.weight:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.ln1.weight:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.ln1.weight:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.ln1.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.ln1.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.ln1.bias:decay_mult=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_pred.bias:lr=0.0024
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_pred.bias:weight_decay=0.0
+2024/05/23 16:56:12 - mmengine - INFO - paramwise_options -- neck.decoder_pred.bias:decay_mult=0.0
+2024/05/23 16:56:13 - mmengine - INFO - load model from: /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth
+2024/05/23 16:56:13 - mmengine - INFO - Loads checkpoint by local backend from path: /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth
+2024/05/23 16:56:15 - mmengine - WARNING - The model and loaded state dict do not match exactly
+
+unexpected key in source state_dict: data_preprocessor.mean, data_preprocessor.std
+
+Name of parameter - Initialization information
+
+backbone.cls_token - torch.Size([1, 1, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.pos_embed - torch.Size([1, 197, 1024]): 
+Initialized by user-defined `init_weights` in MAEViT  
+
+backbone.patch_embed.projection.weight - torch.Size([1024, 3, 16, 16]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.patch_embed.projection.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.0.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.0.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.0.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.0.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.0.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.0.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.0.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.0.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.0.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.0.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.0.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.0.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.1.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.1.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.1.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.1.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.1.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.1.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.1.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.1.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.1.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.1.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.1.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.1.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.2.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.2.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.2.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.2.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.2.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.2.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.2.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.2.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.2.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.2.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.2.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.2.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.3.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.3.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.3.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.3.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.3.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.3.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.3.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.3.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.3.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.3.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.3.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.3.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.4.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.4.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.4.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.4.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.4.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.4.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.4.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.4.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.4.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.4.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.4.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.4.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.5.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.5.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.5.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.5.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.5.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.5.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.5.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.5.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.5.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.5.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.5.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.5.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.6.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.6.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.6.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.6.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.6.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.6.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.6.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.6.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.6.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.6.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.6.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.6.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.7.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.7.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.7.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.7.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.7.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.7.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.7.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.7.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.7.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.7.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.7.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.7.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.8.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.8.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.8.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.8.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.8.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.8.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.8.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.8.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.8.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.8.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.8.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.8.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.9.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.9.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.9.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.9.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.9.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.9.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.9.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.9.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.9.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.9.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.9.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.9.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.10.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.10.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.10.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.10.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.10.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.10.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.10.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.10.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.10.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.10.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.10.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.10.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.11.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.11.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.11.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.11.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.11.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.11.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.11.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.11.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.11.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.11.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.11.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.11.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.12.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.12.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.12.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.12.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.12.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.12.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.12.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.12.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.12.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.12.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.12.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.12.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.13.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.13.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.13.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.13.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.13.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.13.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.13.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.13.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.13.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.13.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.13.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.13.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.14.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.14.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.14.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.14.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.14.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.14.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.14.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.14.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.14.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.14.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.14.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.14.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.15.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.15.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.15.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.15.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.15.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.15.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.15.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.15.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.15.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.15.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.15.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.15.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.16.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.16.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.16.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.16.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.16.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.16.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.16.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.16.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.16.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.16.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.16.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.16.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.17.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.17.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.17.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.17.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.17.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.17.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.17.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.17.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.17.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.17.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.17.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.17.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.18.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.18.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.18.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.18.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.18.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.18.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.18.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.18.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.18.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.18.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.18.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.18.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.19.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.19.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.19.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.19.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.19.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.19.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.19.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.19.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.19.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.19.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.19.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.19.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.20.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.20.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.20.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.20.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.20.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.20.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.20.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.20.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.20.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.20.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.20.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.20.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.21.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.21.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.21.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.21.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.21.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.21.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.21.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.21.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.21.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.21.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.21.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.21.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.22.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.22.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.22.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.22.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.22.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.22.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.22.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.22.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.22.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.22.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.22.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.22.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.23.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.23.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.23.attn.qkv.weight - torch.Size([3072, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.23.attn.qkv.bias - torch.Size([3072]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.23.attn.proj.weight - torch.Size([1024, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.23.attn.proj.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.23.ln2.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.23.ln2.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.23.ffn.layers.0.0.weight - torch.Size([4096, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.23.ffn.layers.0.0.bias - torch.Size([4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.23.ffn.layers.1.weight - torch.Size([1024, 4096]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.layers.23.ffn.layers.1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.ln1.weight - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+backbone.ln1.bias - torch.Size([1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.mask_token - torch.Size([1, 1, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_pos_embed - torch.Size([1, 197, 512]): 
+Initialized by user-defined `init_weights` in MAEPretrainDecoder  
+
+neck.decoder_embed.weight - torch.Size([512, 1024]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_embed.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.0.ln1.weight - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.0.ln1.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.0.attn.qkv.weight - torch.Size([1536, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.0.attn.qkv.bias - torch.Size([1536]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.0.attn.proj.weight - torch.Size([512, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.0.attn.proj.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.0.ln2.weight - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.0.ln2.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.0.ffn.layers.0.0.weight - torch.Size([2048, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.0.ffn.layers.0.0.bias - torch.Size([2048]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.0.ffn.layers.1.weight - torch.Size([512, 2048]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.0.ffn.layers.1.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.1.ln1.weight - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.1.ln1.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.1.attn.qkv.weight - torch.Size([1536, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.1.attn.qkv.bias - torch.Size([1536]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.1.attn.proj.weight - torch.Size([512, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.1.attn.proj.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.1.ln2.weight - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.1.ln2.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.1.ffn.layers.0.0.weight - torch.Size([2048, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.1.ffn.layers.0.0.bias - torch.Size([2048]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.1.ffn.layers.1.weight - torch.Size([512, 2048]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.1.ffn.layers.1.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.2.ln1.weight - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.2.ln1.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.2.attn.qkv.weight - torch.Size([1536, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.2.attn.qkv.bias - torch.Size([1536]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.2.attn.proj.weight - torch.Size([512, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.2.attn.proj.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.2.ln2.weight - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.2.ln2.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.2.ffn.layers.0.0.weight - torch.Size([2048, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.2.ffn.layers.0.0.bias - torch.Size([2048]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.2.ffn.layers.1.weight - torch.Size([512, 2048]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.2.ffn.layers.1.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.3.ln1.weight - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.3.ln1.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.3.attn.qkv.weight - torch.Size([1536, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.3.attn.qkv.bias - torch.Size([1536]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.3.attn.proj.weight - torch.Size([512, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.3.attn.proj.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.3.ln2.weight - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.3.ln2.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.3.ffn.layers.0.0.weight - torch.Size([2048, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.3.ffn.layers.0.0.bias - torch.Size([2048]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.3.ffn.layers.1.weight - torch.Size([512, 2048]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.3.ffn.layers.1.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.4.ln1.weight - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.4.ln1.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.4.attn.qkv.weight - torch.Size([1536, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.4.attn.qkv.bias - torch.Size([1536]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.4.attn.proj.weight - torch.Size([512, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.4.attn.proj.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.4.ln2.weight - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.4.ln2.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.4.ffn.layers.0.0.weight - torch.Size([2048, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.4.ffn.layers.0.0.bias - torch.Size([2048]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.4.ffn.layers.1.weight - torch.Size([512, 2048]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.4.ffn.layers.1.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.5.ln1.weight - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.5.ln1.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.5.attn.qkv.weight - torch.Size([1536, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.5.attn.qkv.bias - torch.Size([1536]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.5.attn.proj.weight - torch.Size([512, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.5.attn.proj.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.5.ln2.weight - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.5.ln2.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.5.ffn.layers.0.0.weight - torch.Size([2048, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.5.ffn.layers.0.0.bias - torch.Size([2048]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.5.ffn.layers.1.weight - torch.Size([512, 2048]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.5.ffn.layers.1.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.6.ln1.weight - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.6.ln1.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.6.attn.qkv.weight - torch.Size([1536, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.6.attn.qkv.bias - torch.Size([1536]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.6.attn.proj.weight - torch.Size([512, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.6.attn.proj.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.6.ln2.weight - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.6.ln2.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.6.ffn.layers.0.0.weight - torch.Size([2048, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.6.ffn.layers.0.0.bias - torch.Size([2048]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.6.ffn.layers.1.weight - torch.Size([512, 2048]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.6.ffn.layers.1.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.7.ln1.weight - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.7.ln1.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.7.attn.qkv.weight - torch.Size([1536, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.7.attn.qkv.bias - torch.Size([1536]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.7.attn.proj.weight - torch.Size([512, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.7.attn.proj.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.7.ln2.weight - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.7.ln2.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.7.ffn.layers.0.0.weight - torch.Size([2048, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.7.ffn.layers.0.0.bias - torch.Size([2048]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.7.ffn.layers.1.weight - torch.Size([512, 2048]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_blocks.7.ffn.layers.1.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.ln1.weight - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.ln1.bias - torch.Size([512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_pred.weight - torch.Size([768, 512]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+
+neck.decoder_pred.bias - torch.Size([768]): 
+PretrainedInit: load from /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/code/train/mae_vit-large-p16_8xb512-fp16-coslr-1600e_in1k_20220825-cc7e98c9.pth 
+2024/05/23 16:56:15 - mmengine - WARNING - "FileClient" will be deprecated in future. Please use io functions in https://mmengine.readthedocs.io/en/latest/api/fileio.html#file-io
+2024/05/23 16:56:15 - mmengine - WARNING - "HardDiskBackend" is the alias of "LocalBackend" and the former will be deprecated in future.
+2024/05/23 16:56:15 - mmengine - INFO - Checkpoints will be saved to /mnt/pfs-mc0p4k/cv/team/panxuhao/playground/miccai24_cxr_lt/mmpretrain/work_dirs/mae_vit-large-p16_8xb512-amp-coslr-1600e_in1k.
+2024/05/23 16:58:43 - mmengine - INFO - Epoch(train)    [1][  1/185]  base_lr: 2.4000e-07 lr: 2.4000e-07  eta: 506 days, 16:05:39  time: 147.8935  data_time: 135.8208  memory: 31558  loss: 0.2384
+2024/05/23 16:58:44 - mmengine - INFO - Epoch(train)    [1][  2/185]  base_lr: 5.6434e-07 lr: 5.6434e-07  eta: 254 days, 18:31:10  time: 74.3663  data_time: 67.9300  memory: 35162  loss: 0.2407
+2024/05/23 16:58:45 - mmengine - INFO - Epoch(train)    [1][  3/185]  base_lr: 8.8867e-07 lr: 8.8867e-07  eta: 170 days, 15:10:20  time: 49.8067  data_time: 45.3092  memory: 35156  loss: 0.2418
+2024/05/23 16:58:45 - mmengine - INFO - Epoch(train)    [1][  4/185]  base_lr: 1.2130e-06 lr: 1.2130e-06  eta: 128 days, 13:52:03  time: 37.5313  data_time: 33.9986  memory: 35156  loss: 0.2402
+2024/05/23 16:58:46 - mmengine - INFO - Epoch(train)    [1][  5/185]  base_lr: 1.5373e-06 lr: 1.5373e-06  eta: 103 days, 6:34:36  time: 30.1454  data_time: 27.2137  memory: 35156  loss: 0.2393
+2024/05/23 16:58:47 - mmengine - INFO - Epoch(train)    [1][  6/185]  base_lr: 1.8617e-06 lr: 1.8617e-06  eta: 86 days, 9:39:48  time: 25.2207  data_time: 22.6880  memory: 35156  loss: 0.2390
+2024/05/23 16:58:47 - mmengine - INFO - Epoch(train)    [1][  7/185]  base_lr: 2.1860e-06 lr: 2.1860e-06  eta: 74 days, 8:29:40  time: 21.7038  data_time: 19.4555  memory: 35156  loss: 0.2391
+2024/05/23 16:58:48 - mmengine - INFO - Epoch(train)    [1][  8/185]  base_lr: 2.5104e-06 lr: 2.5104e-06  eta: 65 days, 9:09:03  time: 19.0848  data_time: 17.0308  memory: 35156  loss: 0.2393
+2024/05/23 16:58:49 - mmengine - INFO - Epoch(train)    [1][  9/185]  base_lr: 2.8347e-06 lr: 2.8347e-06  eta: 58 days, 8:19:52  time: 17.0316  data_time: 15.1411  memory: 35156  loss: 0.2398
+2024/05/23 16:58:49 - mmengine - INFO - Epoch(train)    [1][ 10/185]  base_lr: 3.1590e-06 lr: 3.1590e-06  eta: 52 days, 19:10:51  time: 15.4122  data_time: 13.6297  memory: 35156  loss: 0.2400
+2024/05/23 16:58:50 - mmengine - INFO - Epoch(train)    [1][ 11/185]  base_lr: 3.4834e-06 lr: 3.4834e-06  eta: 48 days, 6:02:48  time: 0.7040  data_time: 0.0555  memory: 35156  loss: 0.2401
+2024/05/23 16:58:51 - mmengine - INFO - Epoch(train)    [1][ 12/185]  base_lr: 3.8077e-06 lr: 3.8077e-06  eta: 44 days, 10:20:29  time: 0.6902  data_time: 0.0579  memory: 35156  loss: 0.2386
+2024/05/23 16:58:52 - mmengine - INFO - Epoch(train)    [1][ 13/185]  base_lr: 4.1320e-06 lr: 4.1320e-06  eta: 41 days, 5:48:35  time: 0.7084  data_time: 0.0573  memory: 35156  loss: 0.2383
+2024/05/23 16:58:53 - mmengine - INFO - Epoch(train)    [1][ 14/185]  base_lr: 4.4564e-06 lr: 4.4564e-06  eta: 38 days, 12:14:39  time: 0.7253  data_time: 0.0542  memory: 35156  loss: 0.2381
+2024/05/23 16:58:54 - mmengine - INFO - Epoch(train)    [1][ 15/185]  base_lr: 4.7807e-06 lr: 4.7807e-06  eta: 36 days, 3:37:37  time: 0.7565  data_time: 0.0504  memory: 35156  loss: 0.2374
+2024/05/23 16:58:54 - mmengine - INFO - Epoch(train)    [1][ 16/185]  base_lr: 5.1050e-06 lr: 5.1050e-06  eta: 34 days, 1:45:02  time: 0.7814  data_time: 0.0481  memory: 35156  loss: 0.2378
+2024/05/23 17:00:59 - mmengine - INFO - Epoch(train)    [1][ 17/185]  base_lr: 5.4294e-06 lr: 5.4294e-06  eta: 57 days, 1:43:45  time: 13.1290  data_time: 11.6482  memory: 35156  loss: 0.2370
+2024/05/23 17:00:59 - mmengine - INFO - Epoch(train)    [1][ 18/185]  base_lr: 5.7537e-06 lr: 5.7537e-06  eta: 54 days, 0:46:26  time: 13.1227  data_time: 11.6498  memory: 35156  loss: 0.2367
+2024/05/23 17:01:00 - mmengine - INFO - Epoch(train)    [1][ 19/185]  base_lr: 6.0780e-06 lr: 6.0780e-06  eta: 51 days, 7:39:19  time: 13.1346  data_time: 11.6493  memory: 35156  loss: 0.2354
+2024/05/23 17:01:01 - mmengine - INFO - Epoch(train)    [1][ 20/185]  base_lr: 6.4024e-06 lr: 6.4024e-06  eta: 48 days, 21:17:20  time: 13.1292  data_time: 11.6515  memory: 35156  loss: 0.2355
+2024/05/23 17:01:01 - mmengine - INFO - Epoch(train)    [1][ 21/185]  base_lr: 6.7267e-06 lr: 6.7267e-06  eta: 46 days, 16:14:31  time: 13.1203  data_time: 11.6458  memory: 35156  loss: 0.2346
+2024/05/23 17:01:02 - mmengine - INFO - Epoch(train)    [1][ 22/185]  base_lr: 7.0511e-06 lr: 7.0511e-06  eta: 44 days, 16:08:00  time: 13.1255  data_time: 11.6468  memory: 35156  loss: 0.2354
+2024/05/23 17:01:03 - mmengine - INFO - Epoch(train)    [1][ 23/185]  base_lr: 7.3754e-06 lr: 7.3754e-06  eta: 42 days, 19:43:36  time: 13.1004  data_time: 11.6431  memory: 35156  loss: 0.2347
+2024/05/23 17:01:04 - mmengine - INFO - Epoch(train)    [1][ 24/185]  base_lr: 7.6997e-06 lr: 7.6997e-06  eta: 41 days, 3:18:02  time: 13.0830  data_time: 11.6509  memory: 35156  loss: 0.2345
+2024/05/23 17:01:04 - mmengine - INFO - Epoch(train)    [1][ 25/185]  base_lr: 8.0241e-06 lr: 8.0241e-06  eta: 39 days, 13:50:01  time: 13.0534  data_time: 11.6541  memory: 35156  loss: 0.2354
+2024/05/23 17:01:05 - mmengine - INFO - Epoch(train)    [1][ 26/185]  base_lr: 8.3484e-06 lr: 8.3484e-06  eta: 38 days, 3:28:31  time: 13.0375  data_time: 11.6565  memory: 35156  loss: 0.2348
+2024/05/23 17:01:05 - mmengine - INFO - Epoch(train)    [1][ 27/185]  base_lr: 8.6727e-06 lr: 8.6727e-06  eta: 36 days, 19:38:46  time: 0.6980  data_time: 0.0529  memory: 35156  loss: 0.2346
+2024/05/23 17:01:06 - mmengine - INFO - Epoch(train)    [1][ 28/185]  base_lr: 8.9971e-06 lr: 8.9971e-06  eta: 35 days, 13:56:18  time: 0.6923  data_time: 0.0485  memory: 35156  loss: 0.2343
+2024/05/23 17:01:07 - mmengine - INFO - Epoch(train)    [1][ 29/185]  base_lr: 9.3214e-06 lr: 9.3214e-06  eta: 34 days, 11:12:31  time: 0.7157  data_time: 0.0538  memory: 35156  loss: 0.2336
+2024/05/23 17:01:08 - mmengine - INFO - Epoch(train)    [1][ 30/185]  base_lr: 9.6457e-06 lr: 9.6457e-06  eta: 33 days, 9:21:40  time: 0.7004  data_time: 0.0532  memory: 35156  loss: 0.2324
+2024/05/23 17:01:08 - mmengine - INFO - Epoch(train)    [1][ 31/185]  base_lr: 9.9701e-06 lr: 9.9701e-06  eta: 32 days, 9:08:52  time: 0.6900  data_time: 0.0580  memory: 35156  loss: 0.2322
+2024/05/23 17:01:09 - mmengine - INFO - Epoch(train)    [1][ 32/185]  base_lr: 1.0294e-05 lr: 1.0294e-05  eta: 31 days, 10:23:38  time: 0.6744  data_time: 0.0553  memory: 35156  loss: 0.2317
